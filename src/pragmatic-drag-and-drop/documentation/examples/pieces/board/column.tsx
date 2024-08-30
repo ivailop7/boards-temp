@@ -37,7 +37,6 @@ import { token } from '@atlaskit/tokens';
 import { type ColumnType } from '../../data/people';
 
 import { useBoardContext } from './board-context';
-import { Card } from './card';
 import { ColumnContext, type ColumnContextProps, useColumnContext } from './column-context';
 
 const columnStyles = xcss({
@@ -66,13 +65,6 @@ const stackStyles = xcss({
 const scrollContainerStyles = xcss({
 	height: '100%',
 	overflowY: 'auto',
-});
-
-const cardListStyles = xcss({
-	boxSizing: 'border-box',
-	minHeight: '100%',
-	padding: 'space.100',
-	gap: 'space.100',
 });
 
 const columnHeaderStyles = xcss({
@@ -298,11 +290,7 @@ export const Column = memo(function Column({ column }: { column: ColumnType }) {
 							<ActionMenu />
 						</Inline>
 						<Box xcss={scrollContainerStyles} ref={scrollableRef}>
-							<Stack xcss={cardListStyles} space="space.100">
-								{column.items.map((item) => (
-									<Card item={item} key={item.userId} />
-								))}
-							</Stack>
+							{"ColId: "+columnId}
 						</Box>
 					</Stack>
 				</Stack>

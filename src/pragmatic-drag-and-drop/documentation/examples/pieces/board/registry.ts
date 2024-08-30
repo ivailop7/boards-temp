@@ -16,15 +16,7 @@ export type ColumnEntry = {
  * so that we can restore focus to the trigger when a card moves between columns.
  */
 export function createRegistry() {
-	const cards = new Map<string, CardEntry>();
 	const columns = new Map<string, ColumnEntry>();
-
-	function registerCard({ cardId, entry }: { cardId: string; entry: CardEntry }): CleanupFn {
-		cards.set(cardId, entry);
-		return function cleanup() {
-			cards.delete(cardId);
-		};
-	}
 
 	function registerColumn({
 		columnId,
@@ -35,14 +27,8 @@ export function createRegistry() {
 	}): CleanupFn {
 		columns.set(columnId, entry);
 		return function cleanup() {
-			cards.delete(columnId);
+			console.log("cleanup")
 		};
-	}
-
-	function getCard(cardId: string): CardEntry {
-		const entry = cards.get(cardId);
-		invariant(entry);
-		return entry;
 	}
 
 	function getColumn(columnId: string): ColumnEntry {
@@ -51,5 +37,5 @@ export function createRegistry() {
 		return entry;
 	}
 
-	return { registerCard, registerColumn, getCard, getColumn };
+	return { registerColumn, getColumn };
 }
