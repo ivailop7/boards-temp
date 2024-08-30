@@ -11,14 +11,6 @@ export type BoardContextValue = {
 
 	reorderColumn: (args: { startIndex: number; finishIndex: number }) => void;
 
-	registerCard: (args: {
-		cardId: string;
-		entry: {
-			element: HTMLElement;
-			actionMenuTrigger: HTMLElement;
-		};
-	}) => CleanupFn;
-
 	registerColumn: (args: {
 		columnId: string;
 		entry: {

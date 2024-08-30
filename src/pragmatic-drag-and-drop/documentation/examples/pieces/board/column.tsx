@@ -83,23 +83,18 @@ const columnHeaderStyles = xcss({
  */
 type State =
 	| { type: 'idle' }
-	| { type: 'is-card-over' }
 	| { type: 'is-column-over'; closestEdge: Edge | null }
 	| { type: 'generate-safari-column-preview'; container: HTMLElement }
 	| { type: 'generate-column-preview' };
 
 // preventing re-renders with stable state objects
 const idle: State = { type: 'idle' };
-const isCardOver: State = { type: 'is-card-over' };
 
 const stateStyles: {
 	[key in State['type']]: ReturnType<typeof xcss> | undefined;
 } = {
 	idle: xcss({
 		cursor: 'grab',
-	}),
-	'is-card-over': xcss({
-		backgroundColor: 'color.background.selected.hovered',
 	}),
 	'is-column-over': undefined,
 	/**
@@ -185,18 +180,6 @@ export const Column = memo(function Column({ column }: { column: ColumnType }) {
 				},
 			}),
 			dropTargetForElements({
-				element: columnInnerRef.current,
-				getData: () => ({ columnId }),
-				canDrop: ({ source }) => {
-					return source.data.instanceId === instanceId && source.data.type === 'card';
-				},
-				getIsSticky: () => true,
-				onDragEnter: () => setState(isCardOver),
-				onDragLeave: () => setState(idle),
-				onDragStart: () => setState(isCardOver),
-				onDrop: () => setState(idle),
-			}),
-			dropTargetForElements({
 				element: columnRef.current,
 				canDrop: ({ source }) => {
 					return source.data.instanceId === instanceId && source.data.type === 'column';
@@ -251,17 +234,9 @@ export const Column = memo(function Column({ column }: { column: ColumnType }) {
 		stableItems.current = column.items;
 	}, [column.items]);
 
-	const getCardIndex = useCallback((userId: string) => {
-		return stableItems.current.findIndex((item) => item.userId === userId);
-	}, []);
-
-	const getNumCards = useCallback(() => {
-		return stableItems.current.length;
-	}, []);
-
 	const contextValue: ColumnContextProps = useMemo(() => {
-		return { columnId, getCardIndex, getNumCards };
-	}, [columnId, getCardIndex, getNumCards]);
+		return { columnId};
+	}, [columnId]);
 
 	return (
 		<ColumnContext.Provider value={contextValue}>

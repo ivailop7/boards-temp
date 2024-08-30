@@ -173,7 +173,6 @@ export default function BoardExample() {
 		return {
 			getColumns,
 			reorderColumn,
-			registerCard: registry.registerCard,
 			registerColumn: registry.registerColumn,
 			instanceId,
 		};
