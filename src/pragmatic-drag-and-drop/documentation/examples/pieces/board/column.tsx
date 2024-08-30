@@ -220,12 +220,7 @@ export const Column = memo(function Column({ column }: { column: ColumnType }) {
 				onDrop: () => {
 					setState(idle);
 				},
-			}),
-			autoScrollForElements({
-				element: scrollableRef.current,
-				canScroll: ({ source }) =>
-					source.data.instanceId === instanceId && source.data.type === 'card',
-			}),
+			})
 		);
 	}, [columnId, registerColumn, instanceId]);
 
