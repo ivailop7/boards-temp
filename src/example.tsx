@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import invariant from 'tiny-invariant';
-
 import { triggerPostMoveFlash } from '@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash';
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import type { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/types';
@@ -10,8 +8,6 @@ import * as liveRegion from '@atlaskit/pragmatic-drag-and-drop-live-region';
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { reorder } from '@atlaskit/pragmatic-drag-and-drop/reorder';
-
-import { type ColumnMap, type ColumnType, getBasicData, type Person } from './pragmatic-drag-and-drop/documentation/examples/data/people';
 import Board from './pragmatic-drag-and-drop/documentation/examples/pieces/board/board';
 import { BoardContext, type BoardContextValue } from './pragmatic-drag-and-drop/documentation/examples/pieces/board/board-context';
 import { Column } from './pragmatic-drag-and-drop/documentation/examples/pieces/board/column';
@@ -37,6 +33,40 @@ type BoardState = {
 	orderedColumnIds: string[];
 	lastOperation: Operation | null;
 };
+
+export type ColumnType = {
+	title: string;
+	columnId: string;
+	items: any[];
+};
+export type ColumnMap = { [columnId: string]: ColumnType };
+
+export function getBasicData() {
+	const columnMap: ColumnMap = {
+		confluence: {
+			title: 'Confluence',
+			columnId: 'confluence',
+			items: [],
+		},
+		jira: {
+			title: 'Jira',
+			columnId: 'jira',
+			items: [],
+		},
+		trello: {
+			title: 'Trello',
+			columnId: 'trello',
+			items: [],
+		},
+	};
+
+	const orderedColumnIds = ['confluence', 'jira', 'trello'];
+
+	return {
+		columnMap,
+		orderedColumnIds,
+	};
+}
 
 export default function BoardExample() {
 	const [data, setData] = useState<BoardState>(() => {

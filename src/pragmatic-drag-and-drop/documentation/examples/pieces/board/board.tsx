@@ -14,7 +14,7 @@ const boardStyles = xcss({
 	justifyContent: 'center',
 	gap: 'space.200',
 	flexDirection: 'row',
-	height: '480px',
+	height: '50px',
 });
 
 const Board = forwardRef<HTMLDivElement, BoardProps>(({ children }: BoardProps, ref) => {
