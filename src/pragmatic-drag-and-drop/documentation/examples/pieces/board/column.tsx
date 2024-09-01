@@ -1,23 +1,13 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 
 import { createPortal } from 'react-dom';
 import invariant from 'tiny-invariant';
 
-import { IconButton } from '@atlaskit/button/new';
-import DropdownMenu, {
-	type CustomTriggerProps,
-	DropdownItem,
-	DropdownItemGroup,
-} from '@atlaskit/dropdown-menu';
-// eslint-disable-next-line @atlaskit/design-system/no-banned-imports
-import mergeRefs from '@atlaskit/ds-lib/merge-refs';
 import Heading from '@atlaskit/heading';
 // This is the smaller MoreIcon soon to be more easily accessible with the
 // ongoing icon project
-import MoreIcon from '@atlaskit/icon/glyph/editor/more';
 import { easeInOut } from '@atlaskit/motion/curves';
 import { mediumDurationMs } from '@atlaskit/motion/durations';
-import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
 import {
 	attachClosestEdge,
 	type Edge,
@@ -33,11 +23,8 @@ import { centerUnderPointer } from '@atlaskit/pragmatic-drag-and-drop/element/ce
 import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
 import { Box, Flex, Inline, Stack, xcss } from '@atlaskit/primitives';
 import { token } from '@atlaskit/tokens';
-
 import { type ColumnType } from '../../data/people';
-
 import { useBoardContext } from './board-context';
-import { ColumnContext, type ColumnContextProps, useColumnContext } from './column-context';
 
 const columnStyles = xcss({
 	width: '250px',
@@ -229,12 +216,8 @@ export const Column = memo(function Column({ column }: { column: ColumnType }) {
 		stableItems.current = column.items;
 	}, [column.items]);
 
-	const contextValue: ColumnContextProps = useMemo(() => {
-		return { columnId};
-	}, [columnId]);
-
 	return (
-		<ColumnContext.Provider value={contextValue}>
+		<>
 			<Flex
 				testId={`column-${columnId}`}
 				ref={columnRef}
@@ -242,9 +225,9 @@ export const Column = memo(function Column({ column }: { column: ColumnType }) {
 				xcss={[columnStyles, stateStyles[state.type]]}
 			>
 				{/* This element takes up the same visual space as the column.
-          We are using a separate element so we can have two drop targets
-          that take up the same visual space (one for cards, one for columns)
-        */}
+					We are using a separate element so we can have two drop targets
+					that take up the same visual space (one for cards, one for columns)
+				*/}
 				<Stack xcss={stackStyles} ref={columnInnerRef}>
 					<Stack xcss={[stackStyles, isDragging ? isDraggingStyles : undefined]}>
 						<Inline
@@ -257,7 +240,6 @@ export const Column = memo(function Column({ column }: { column: ColumnType }) {
 							<Heading size="xxsmall" as="span" testId={`column-header-title-${columnId}`}>
 								{column.title}
 							</Heading>
-							<ActionMenu />
 						</Inline>
 						<Box xcss={scrollContainerStyles} ref={scrollableRef}>
 							{"ColId: "+columnId}
@@ -271,7 +253,7 @@ export const Column = memo(function Column({ column }: { column: ColumnType }) {
 			{state.type === 'generate-safari-column-preview'
 				? createPortal(<SafariColumnPreview column={column} />, state.container)
 				: null}
-		</ColumnContext.Provider>
+			</>
 	);
 });
 
@@ -289,62 +271,5 @@ function SafariColumnPreview({ column }: { column: ColumnType }) {
 				{column.title}
 			</Heading>
 		</Box>
-	);
-}
-
-function ActionMenu() {
-	return (
-		<DropdownMenu trigger={DropdownMenuTrigger}>
-			<ActionMenuItems />
-		</DropdownMenu>
-	);
-}
-
-function ActionMenuItems() {
-	const { columnId } = useColumnContext();
-	const { getColumns, reorderColumn } = useBoardContext();
-
-	const columns = getColumns();
-	const startIndex = columns.findIndex((column) => column.columnId === columnId);
-
-	const moveLeft = useCallback(() => {
-		reorderColumn({
-			startIndex,
-			finishIndex: startIndex - 1,
-		});
-	}, [reorderColumn, startIndex]);
-
-	const moveRight = useCallback(() => {
-		reorderColumn({
-			startIndex,
-			finishIndex: startIndex + 1,
-		});
-	}, [reorderColumn, startIndex]);
-
-	const isMoveLeftDisabled = startIndex === 0;
-	const isMoveRightDisabled = startIndex === columns.length - 1;
-
-	return (
-		<DropdownItemGroup>
-			<DropdownItem onClick={moveLeft} isDisabled={isMoveLeftDisabled}>
-				Move left
-			</DropdownItem>
-			<DropdownItem onClick={moveRight} isDisabled={isMoveRightDisabled}>
-				Move right
-			</DropdownItem>
-		</DropdownItemGroup>
-	);
-}
-
-function DropdownMenuTrigger({ triggerRef, ...triggerProps }: CustomTriggerProps) {
-	return (
-		<IconButton
-			ref={mergeRefs([triggerRef])}
-			appearance="subtle"
-			label="Actions"
-			spacing="compact"
-			icon={MoreIcon}
-			{...triggerProps}
-		/>
 	);
 }
