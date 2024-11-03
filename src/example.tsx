@@ -37,7 +37,6 @@ type BoardState = {
 export type ColumnType = {
 	title: string;
 	columnId: string;
-	items: any[];
 };
 export type ColumnMap = { [columnId: string]: ColumnType };
 
@@ -46,17 +45,14 @@ export function getBasicData() {
 		confluence: {
 			title: 'Confluence',
 			columnId: 'confluence',
-			items: [],
 		},
 		jira: {
 			title: 'Jira',
 			columnId: 'jira',
-			items: [],
 		},
 		trello: {
 			title: 'Trello',
 			columnId: 'trello',
-			items: [],
 		},
 	};
 

@@ -23,7 +23,6 @@ import { centerUnderPointer } from '@atlaskit/pragmatic-drag-and-drop/element/ce
 import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
 import { Box, Flex, Inline, Stack, xcss } from '@atlaskit/primitives';
 import { token } from '@atlaskit/tokens';
-import { type ColumnType } from '../../data/people';
 import { useBoardContext } from './board-context';
 
 const columnStyles = xcss({
@@ -47,11 +46,6 @@ const stackStyles = xcss({
 	// ensure our card list grows to be all the available space
 	// so that users can easily drop on en empty list
 	flexGrow: 1,
-});
-
-const scrollContainerStyles = xcss({
-	height: '100%',
-	overflowY: 'auto',
 });
 
 const columnHeaderStyles = xcss({
@@ -116,7 +110,6 @@ export const Column = memo(function Column({ column }: { column: ColumnType }) {
 	const columnRef = useRef<HTMLDivElement | null>(null);
 	const columnInnerRef = useRef<HTMLDivElement | null>(null);
 	const headerRef = useRef<HTMLDivElement | null>(null);
-	const scrollableRef = useRef<HTMLDivElement | null>(null);
 	const [state, setState] = useState<State>(idle);
 	const [isDragging, setIsDragging] = useState<boolean>(false);
 
@@ -126,7 +119,6 @@ export const Column = memo(function Column({ column }: { column: ColumnType }) {
 		invariant(columnRef.current);
 		invariant(columnInnerRef.current);
 		invariant(headerRef.current);
-		invariant(scrollableRef.current);
 		return combine(
 			registerColumn({
 				columnId,
@@ -211,11 +203,6 @@ export const Column = memo(function Column({ column }: { column: ColumnType }) {
 		);
 	}, [columnId, registerColumn, instanceId]);
 
-	const stableItems = useRef(column.items);
-	useEffect(() => {
-		stableItems.current = column.items;
-	}, [column.items]);
-
 	return (
 		<>
 			<Flex
@@ -241,9 +228,6 @@ export const Column = memo(function Column({ column }: { column: ColumnType }) {
 								{column.title}
 							</Heading>
 						</Inline>
-						<Box xcss={scrollContainerStyles} ref={scrollableRef}>
-							{"ColId: "+columnId}
-						</Box>
 					</Stack>
 				</Stack>
 				{state.type === 'is-column-over' && state.closestEdge && (
